@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .wrap{width: 50px;height: 50px;position: fixed;bottom: 20px;right: 20px;}
+        img{border-radius: 50%;position: absolute;}
+        #home{width: 50px;height: 50px;z-index: 10;transition: 1s;}
+        .ico{width: 42px;height: 42px;left: 4px;top: 4px;}
+    </style>
+</head>
+<body>
+<p>点击右下角图标</p>
+<div class="wrap">
+    <img src="img/home.png" id="home"/>
+    <img src="img/clos.png" class="ico"/>
+    <img src="img/full.png" class="ico"/>
+    <img src="img/prev.png" class="ico"/>
+    <img src="img/open.png" class="ico"/>
+    <img src="img/refresh.png" class="ico"/>
+</div>
+<script>
+    var home=document.getElementById('home');
+    var aIco=document.getElementsByClassName('ico');
+    var t=aIco[0].offsetTop;
+    var l=aIco[0].offsetLeft;
+    var on=true;
+    var r=150;
+
+    home.onclick=function(){
+        if(on){
+            home.style.transform='rotate(-720deg)';
+            for(var i=0;i<aIco.length;i++){
+                aIco[i].style.transition='0.5s '+i*100+'ms';
+                aIco[i].style.top=t+Math.round(-150*Math.cos(Math.PI/(2*(aIco.length-1))*i))+'px';
+                aIco[i].style.left=l+Math.round(-150*Math.sin(Math.PI/(2*(aIco.length-1))*i))+'px';
+                aIco[i].style.transform='rotate(720deg)';
+            }
+        }else{
+            home.style.transform='rotate(0deg)';
+            for(var i=0;i<aIco.length;i++){
+                aIco[aIco.length-i-1].style.transition='0.5s '+i*100+'ms';
+                aIco[i].style.top=t+'px';
+                aIco[i].style.left=l+'px';
+                aIco[i].style.transform='rotate(0deg)';
+            }
+        }
+        on=!on;
+    }
+    for(var i=0;i<aIco.length;i++){
+        aIco[i].onclick=function(){
+            this.style.transition='0.5s';
+            this.style.transform='rotate(720deg) scale(1.5)';
+            this.style.opacity='0.5';
+            addTransformEnd(this,end);
+//            removeTransformEnd(this,end);
+        }
+    }
+    function end(){
+        this.style.transition='0.5s';
+        this.style.transform='rotate(720deg)';
+        this.style.opacity='1';
+        removeTransformEnd(this,end);
+    }
+    function addTransformEnd(obj,fn){
+        obj.addEventListener('webkitTransformEnd',fn,false);
+        obj.addEventListener('transformEnd',fn,false);
+    }
+    function removeTransformEnd(obj,fn){
+        obj.removeEventListener('webkitTransformEnd',fn,false);
+        obj.removeEventListener('transformEnd',fn,false);
+    }
+</script>
+</body>
+</html>
